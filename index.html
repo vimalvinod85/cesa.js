@@ -45,6 +45,31 @@
         .step-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 30px; }
         .step-card { background: white; border: 1px solid #ddd; padding: 15px; border-radius: 8px; }
         .step-header { background: var(--kyriba-yellow); font-weight: bold; padding: 5px; margin: -15px -15px 15px -15px; border-radius: 8px 8px 0 0; font-size: 18px; }
+
+        /* New Team Bio Grid Styles */
+        .team-grid {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 30px;
+        }
+        .team-member {
+            flex: 0 1 250px;
+            text-align: center;
+        }
+        .profile-pic {
+            width: 200px;
+            height: 200px;
+            object-fit: cover; /* Ensures photos aren't stretched */
+            border-radius: 5px;
+            box-shadow: 0 10px 0 var(--kyriba-yellow); /* Kyriba card style accent */
+            margin-bottom: 20px;
+        }
+        .member-name {
+            font-weight: bold;
+            margin: 10px 0 0 0;
+            font-size: 18px !important;
+        }
     </style>
 </head>
 <body>
@@ -88,17 +113,19 @@
             </section>
 
             <section>
-                <div class="split-view">
-                    <div style="flex: 1;">
-                        <h2>Meet Your CESA Team</h2>
-                        <ul style="list-style: none; padding: 0;">
-                            <li style="margin-bottom: 20px;"><strong>Vimal Vinod</strong></li>
-                            <li style="margin-bottom: 20px;"><strong>Juliana Boers</strong></li>
-                            <li style="margin-bottom: 20px;"><strong>Ousseynou Faye</strong></li>
-                        </ul>
+                <h2>Meet Your CESA Team</h2>
+                <div class="team-grid">
+                    <div class="team-member">
+                        <img src="Vimal.jpg" class="profile-pic" alt="Vimal Vinod">
+                        <p class="member-name">Vimal Vinod</p>
                     </div>
-                    <div style="flex: 1;">
-                        <img src="AdobeStock_162750506.jpeg" alt="Team Collaboration" style="border-radius: 10px; box-shadow: 10px 10px 0 var(--kyriba-yellow);">
+                    <div class="team-member">
+                        <img src="Juliana.jpg" class="profile-pic" alt="Juliana Boers">
+                        <p class="member-name">Juliana Boers</p>
+                    </div>
+                    <div class="team-member">
+                        <img src="Ousseynou.jpg" class="profile-pic" alt="Ousseynou Faye">
+                        <p class="member-name">Ousseynou Faye</p>
                     </div>
                 </div>
             </section>
