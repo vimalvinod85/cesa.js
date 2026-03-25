@@ -7,6 +7,7 @@
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/simple.min.css">
+    <script src="//unpkg.com/globe.gl"></script>
 
     <style>
         :root {
@@ -45,54 +46,57 @@
         .step-card { background: white; border: 1px solid #ddd; padding: 15px; border-radius: 8px; }
         .step-header { background: var(--kyriba-yellow); font-weight: bold; padding: 5px; margin: -15px -15px 15px -15px; border-radius: 8px 8px 0 0; font-size: 18px; }
 
-        /* Interactive Team Grid */
-        .team-grid { display: flex; justify-content: center; gap: 40px; margin-top: 30px; }
+        /* Integrated Globe Background */
+        .globe-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            opacity: 0.8; /* Slightly faded so text remains readable */
+        }
+        
+        /* Interactive Team Grid - Elevated over Globe */
+        .team-grid { 
+            display: flex; 
+            justify-content: center; 
+            gap: 40px; 
+            margin-top: 30px; 
+            position: relative;
+            z-index: 10; /* Keeps cards above the globe */
+        }
+        
         .team-member { 
             flex: 0 1 250px; 
             text-align: center; 
-            cursor: pointer;
+            background: rgba(255, 255, 255, 0.95); /* Glassy effect over globe */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 2px solid var(--kyriba-yellow);
         }
         
-        /* Placeholder styling before click */
         .photo-container {
-            width: 220px;
-            height: 220px;
-            background-color: var(--kyriba-dark-grey);
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 15px;
             border-radius: 5px;
-            margin: 0 auto 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
             overflow: hidden;
-            box-shadow: 0 10px 0 var(--kyriba-yellow);
-        }
-
-        .photo-container::after {
-            content: 'Click to Meet';
-            color: white;
-            font-weight: bold;
-            font-size: 14px;
-            opacity: 1;
-            transition: opacity 0.3s;
+            box-shadow: 0 5px 0 var(--kyriba-dark-grey);
         }
 
         .profile-pic { 
             width: 100%; 
             height: 100%; 
             object-fit: cover; 
-            position: absolute;
-            top: 0;
-            left: 0;
-            opacity: 0; /* Hidden initially */
-            transition: opacity 0.6s ease-in-out;
         }
 
-        /* Revealed state */
-        .team-member.active .profile-pic { opacity: 1; }
-        .team-member.active .photo-container::after { opacity: 0; }
+        .member-name { font-weight: bold; margin: 10px 0 0 0; font-size: 22px !important; color: var(--kyriba-text); }
+        .member-loc { font-size: 14px; color: #666; margin-top: 5px;}
 
-        .member-name { font-weight: bold; margin: 10px 0 0 0; font-size: 18px !important; }
+        /* Override heading color for Globe slide for readability */
+        .globe-slide h2 { color: white; border-bottom: 3px solid var(--kyriba-yellow); }
 
         .gainsight-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 30px; text-align: left; }
         .gainsight-card { background: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; height: 100%; }
@@ -139,26 +143,32 @@
                 </p>
             </section>
 
-            <section>
-                <h2>Meet Your CESA Team</h2>
-                    <div class="team-grid">
-                    <div class="team-member" onclick="this.classList.toggle('active')">
+            <section data-background-color="#000" class="globe-slide">
+                <div class="globe-bg" id="globeViz"></div>
+                
+                <h2>Meet Your Global Team</h2>
+                
+                <div class="team-grid">
+                    <div class="team-member">
                         <div class="photo-container">
                             <img src="Vimal.jpg" class="profile-pic" alt="Vimal Vinod">
                         </div>
                         <p class="member-name">Vimal Vinod</p>
+                        <p class="member-loc">London, England</p>
                     </div>
-                    <div class="team-member" onclick="this.classList.toggle('active')">
+                    <div class="team-member">
                         <div class="photo-container">
                             <img src="Juliana.jpg" class="profile-pic" alt="Juliana Boers">
                         </div>
                         <p class="member-name">Juliana Boers</p>
+                        <p class="member-loc">Toronto, Canada</p>
                     </div>
-                    <div class="team-member" onclick="this.classList.toggle('active')">
+                    <div class="team-member">
                         <div class="photo-container">
                             <img src="Ousseynou.jpg" class="profile-pic" alt="Ousseynou Faye">
                         </div>
                         <p class="member-name">Ousseynou Faye</p>
+                        <p class="member-loc">Dublin, Ireland</p>
                     </div>
                 </div>
             </section>
@@ -306,6 +316,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.js"></script>
     <script>
+        // Initialize Reveal
         Reveal.initialize({
             hash: true,
             center: true,
@@ -313,6 +324,31 @@
             controls: true,
             progress: true
         });
+
+        // Initialize Globe
+        const teamData = [
+            { name: 'Vimal', city: 'London, England', lat: 51.5, lng: -0.12 },
+            { name: 'Juliana', city: 'Toronto, Canada', lat: 43.6, lng: -79.3 },
+            { name: 'Ousseynou', city: 'Dublin, Ireland', lat: 53.3, lng: -6.2 }
+        ];
+
+        const myGlobe = Globe()
+            (document.getElementById('globeViz'))
+            .globeImageUrl('//unpkg.com/three-globe/example/img/earth-dark.jpg')
+            .bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png')
+            .backgroundImageUrl('//unpkg.com/three-globe/example/img/night-sky.png')
+            .labelsData(teamData)
+            .labelLat(d => d.lat)
+            .labelLng(d => d.lng)
+            .labelText(d => d.name)
+            .labelSize(2.5)
+            .labelDotRadius(1)
+            .labelColor(() => '#d4f01e')
+            .labelResolution(3);
+
+        myGlobe.controls().autoRotate = true;
+        myGlobe.controls().autoRotateSpeed = 1.0;
+        myGlobe.pointOfView({ lat: 35, lng: -40, altitude: 2.5 });
     </script>
 </body>
 </html>
