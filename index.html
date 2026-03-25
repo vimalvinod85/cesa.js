@@ -15,6 +15,7 @@
             --kyriba-yellow: #d4f01e;
             --kyriba-dark-grey: #2e3a3f;
             --kyriba-text: #1a1a1a;
+            --glass: rgba(255, 255, 255, 0.1);
         }
 
         .reveal { background-color: var(--kyriba-off-white); color: var(--kyriba-text); }
@@ -105,7 +106,7 @@
         .member-name { font-weight: bold; margin: 10px 0 0 0; font-size: 22px !important; color: var(--kyriba-text); }
         .member-loc { font-size: 14px; color: #666; margin-top: 5px;}
 
-        /* Interactive Report Modal (Enlarged) */
+        /* Interactive Report Modal */
         #report-modal {
             display: none;
             position: fixed;
@@ -120,7 +121,7 @@
             box-shadow: 0 25px 50px rgba(0,0,0,0.5);
             text-align: left;
             border-top: 8px solid var(--kyriba-yellow);
-            width: 1100px; /* Made significantly larger */
+            width: 1100px; 
             max-width: 95vw;
             max-height: 90vh;
             overflow-y: auto;
@@ -162,11 +163,12 @@
         .step-header { background: var(--kyriba-yellow); font-weight: bold; padding: 5px; margin: -15px -15px 15px -15px; border-radius: 8px 8px 0 0; font-size: 18px; }
         .split-view { display: flex; align-items: center; gap: 40px; text-align: left; }
         
-        .gainsight-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 30px; text-align: left; }
-        .gainsight-card { background: white; padding: 25px; border-radius: 10px; border: 1px solid #ddd; height: 100%; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; position: relative; overflow: hidden;}
+        /* Updated Gainsight Grid to prevent overlap */
+        .gainsight-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px; text-align: left; }
+        .gainsight-card { background: white; padding: 20px; border-radius: 10px; border: 1px solid #ddd; height: auto; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; position: relative; overflow: hidden;}
         .gainsight-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
         .gainsight-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px; background: var(--kyriba-yellow); }
-        .gainsight-card h4 { font-size: 22px; color: var(--kyriba-dark-grey); margin-bottom: 15px; font-weight: bold; }
+        .gainsight-card h4 { font-size: 22px; color: var(--kyriba-dark-grey); margin-bottom: 10px; font-weight: bold; }
         
         .tag { display: inline-block; padding: 4px 8px; background: #eee; border-radius: 4px; font-size: 12px; font-weight: bold; color: #555; margin-bottom: 10px; margin-right: 5px;}
     </style>
@@ -350,21 +352,21 @@
                 <p style="font-size: 18px; text-align: left;">Requests are submitted by creating an <strong>Activity</strong> in Gainsight and applying the CESA template.</p>
                 
                 <div class="gainsight-grid">
-                    <div class="gainsight-card">
+                    <div class="gainsight-card" style="border-top: none; cursor: default; transform: none; box-shadow: none;">
                         <h4>SA Workshop</h4>
                         <p style="font-size: 14px;">Strategic sessions for value discovery, workflow alignment, or executive conversations.</p>
                     </div>
-                    <div class="gainsight-card">
+                    <div class="gainsight-card" style="border-top: none; cursor: default; transform: none; box-shadow: none;">
                         <h4>SA Help</h4>
                         <p style="font-size: 14px;">Quick support for functionality questions, ad hoc triage, or unclear customer asks.</p>
                     </div>
-                    <div class="gainsight-card" style="border: 2px solid var(--kyriba-yellow);">
+                    <div class="gainsight-card" style="border: 2px solid var(--kyriba-yellow); cursor: default; transform: none; box-shadow: none;">
                         <h4>SA Database Review</h4>
                         <p style="font-size: 14px;">Investigations into data quality, usage patterns, or structural analysis.</p>
                     </div>
                 </div>
                 
-                <div style="margin-top: 30px; font-size: 16px; background: rgba(0,0,0,0.05); padding: 15px; border-radius: 8px;">
+                <div style="margin-top: 20px; font-size: 16px; background: rgba(0,0,0,0.05); padding: 15px; border-radius: 8px;">
                     <strong>Status:</strong> Gainsight templates are currently under construction. <br>
                     <strong>Target Completion:</strong> End of April 2026.
                 </div>
@@ -384,7 +386,7 @@
                         <p style="font-size: 12px; color: var(--kyriba-yellow); font-weight: bold; margin-top: 15px;">View Details →</p>
                     </div>
 
-                    <div class="gainsight-card" onclick="openReport('Quantitative Review', 'Kyriba Users (Treasury Back Office, Sys Admin)', 'Google Forms + Dust AI (@CustomerAssessment)', 'A Google form sent by CEEs focusing on setup and best practices. Customers are scored based on responses, and the Dust AI agent generates a report with recommendations.', 'Clariane_Assessment_Dashboard.pdf', 'https://app.dust.tt/w/1616590054/conversation/UwTucBjHYy#?spid=fil_IxvcBcjc6vGXJ1&spt=interactive_content')">
+                    <div class="gainsight-card" onclick="openReport('Quantitative Review', 'Kyriba Users (Treasury Back Office, Sys Admin)', 'Google Forms + Dust AI (@CustomerAssessment)', 'A Google form sent by CEEs focusing on setup and best practices. Customers are scored based on responses, and the Dust AI agent generates a report with recommendations.', 'Clariane_Assessment_Dashboard.pdf', 'https://app.dust.tt/w/1616590054/conversation/zxGbwYCno3#?spid=fil_fG9iWnEndJQtwc&spt=interactive_content')">
                         <span class="tag">User-Level</span>
                         <h4>Quantitative Review</h4>
                         <p style="font-size: 14px;">Module setup scoring and AI recommendations.</p>
@@ -431,9 +433,9 @@
 
         /* Globe Integration */
         const teamData = [
-            { name: 'Vimal Vinod', city: 'London, England', lat: 51.5, lng: -0.12, img: 'Vimal.jpg' },
-            { name: 'Juliana Boers', city: 'Toronto, Canada', lat: 43.6, lng: -79.3, img: 'Juliana.jpg' },
-            { name: 'Ousseynou Faye', city: 'Dublin, Ireland', lat: 53.3, lng: -6.2, img: 'Ousseynou.jpg' }
+            { name: 'Vimal Vinod', city: 'London, England', lat: 51.5072, lng: -0.1276, img: 'Vimal.jpg' },
+            { name: 'Juliana Boers', city: 'Toronto, Canada', lat: 43.6532, lng: -79.3832, img: 'Juliana.jpg' },
+            { name: 'Ousseynou Faye', city: 'Dublin, Ireland', lat: 53.3498, lng: -6.2603, img: 'Ousseynou.jpg' }
         ];
 
         const myGlobe = Globe()
@@ -452,7 +454,9 @@
 
         myGlobe.controls().autoRotate = true;
         myGlobe.controls().autoRotateSpeed = 1.0;
-        myGlobe.pointOfView({ lat: 35, lng: -40, altitude: 2.5 });
+        
+        // Centered roughly over the North Atlantic to see all three pins clearly
+        myGlobe.pointOfView({ lat: 48, lng: -40, altitude: 2.2 });
 
         /* Assessment Report Modal Logic */
         function openReport(title, target, tech, desc, mediaSrc, linkUrl) {
