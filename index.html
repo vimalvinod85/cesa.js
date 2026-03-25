@@ -7,6 +7,7 @@
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/simple.min.css">
+    <script src="//unpkg.com/globe.gl"></script>
 
     <style>
         :root {
@@ -18,8 +19,8 @@
 
         .reveal { background-color: var(--kyriba-off-white); color: var(--kyriba-text); }
         .reveal h1 { font-size: 52px !important; text-transform: none; font-weight: bold; }
-        .reveal h2 { font-size: 40px !important; text-transform: none; color: var(--kyriba-dark-grey); border-bottom: 3px solid var(--kyriba-yellow); display: inline-block; margin-bottom: 40px; }
-        .reveal p, .reveal li { font-size: 20px; line-height: 1.4; }
+        .reveal h2 { font-size: 40px !important; text-transform: none; color: var(--kyriba-dark-grey); border-bottom: 3px solid var(--kyriba-yellow); display: inline-block; margin-bottom: 20px; }
+        .reveal p, .reveal li { font-size: 18px; line-height: 1.4; }
 
         .kyriba-btn {
             display: inline-block;
@@ -32,71 +33,61 @@
             text-decoration: none;
             border-radius: 5px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.2s, background-color 0.2s;
         }
-        .kyriba-btn:hover { background-color: #c0d91a; transform: translateY(-2px); }
+
+        /* Centering the Globe Container */
+        .globe-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 500px;
+        }
+
+        #globeViz {
+            width: 800px; /* Explicit width for centering */
+            height: 500px;
+        }
+
+        /* Pop-up Overlay Fixes */
+        #profile-overlay {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10000; /* Ensure it is above everything */
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            text-align: center;
+            border-bottom: 8px solid var(--kyriba-yellow);
+            min-width: 340px;
+        }
+
+        #profile-overlay img {
+            width: 300px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        #profile-overlay h3 { margin: 5px 0; color: var(--kyriba-dark-grey); font-size: 24px; }
+        #close-btn { 
+            position: absolute; top: 10px; right: 15px; cursor: pointer; 
+            font-weight: bold; font-size: 28px; color: #666;
+        }
 
         .motto-box { font-style: italic; font-size: 36px !important; border-left: 8px solid var(--kyriba-yellow); padding: 20px 40px; background: rgba(0,0,0,0.03); text-align: left; }
         .org-chart { display: flex; justify-content: center; gap: 50px; margin-top: 50px; }
         .org-box { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 250px; }
         .org-num { font-size: 64px; font-weight: bold; }
-        .split-view { display: flex; align-items: center; gap: 40px; text-align: left; }
         .step-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 30px; }
         .step-card { background: white; border: 1px solid #ddd; padding: 15px; border-radius: 8px; }
         .step-header { background: var(--kyriba-yellow); font-weight: bold; padding: 5px; margin: -15px -15px 15px -15px; border-radius: 8px 8px 0 0; font-size: 18px; }
-
-        /* Interactive Team Grid */
-        .team-grid { display: flex; justify-content: center; gap: 40px; margin-top: 30px; }
-        .team-member { 
-            flex: 0 1 250px; 
-            text-align: center; 
-            cursor: pointer;
-        }
-        
-        /* Placeholder styling before click */
-        .photo-container {
-            width: 220px;
-            height: 220px;
-            background-color: var(--kyriba-dark-grey);
-            border-radius: 5px;
-            margin: 0 auto 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 10px 0 var(--kyriba-yellow);
-        }
-
-        .photo-container::after {
-            content: 'Click to Meet';
-            color: white;
-            font-weight: bold;
-            font-size: 14px;
-            opacity: 1;
-            transition: opacity 0.3s;
-        }
-
-        .profile-pic { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; 
-            position: absolute;
-            top: 0;
-            left: 0;
-            opacity: 0; /* Hidden initially */
-            transition: opacity 0.6s ease-in-out;
-        }
-
-        /* Revealed state */
-        .team-member.active .profile-pic { opacity: 1; }
-        .team-member.active .photo-container::after { opacity: 0; }
-
-        .member-name { font-weight: bold; margin: 10px 0 0 0; font-size: 18px !important; }
-
-        .gainsight-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 30px; text-align: left; }
-        .gainsight-card { background: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; height: 100%; }
-        .gainsight-card h4 { font-size: 18px; color: var(--kyriba-dark-grey); border-bottom: 2px solid var(--kyriba-yellow); padding-bottom: 5px; margin-bottom: 10px; }
+        .split-view { display: flex; align-items: center; gap: 40px; text-align: left; }
     </style>
 </head>
 <body>
@@ -105,17 +96,17 @@
 
             <section>
                 <h1>Best Practices for Working with Customer Engagement Solution Advisors</h1>
-                <p>Building the Bridge to Measurable Customer Value</p>
+                <p>Building the Bridge to Measurable Customer Value [cite: 1543]</p>
                 <div style="margin-top: 80px; font-size: 16px; color: #666;">March 2026</div>
             </section>
 
             <section>
                 <h2>The CESA Mission</h2>
                 <div class="motto-box">
-                    "Transforming potential into performance by shifting from reactive support to proactive value engineering."
+                    "Transforming potential into performance by shifting from reactive support to proactive value engineering." 
                 </div>
                 <p style="margin-top: 40px; text-align: left;">
-                    Unlocking unrealized customer value through deep product expertise and strategic solution architecture.
+                    Unlocking unrealized customer value through deep product expertise and strategic solution architecture[cite: 1389, 1390].
                 </p>
             </section>
 
@@ -125,63 +116,43 @@
                     <div class="org-box">
                         <div class="org-num">19</div>
                         <div style="font-weight: bold;">CEEs</div>
-                        <p style="font-size: 14px;">Customer Engagement Executives</p>
+                        <p style="font-size: 14px;">Customer Engagement Executives [cite: 1542]</p>
                     </div>
                     <div style="align-self: center; font-size: 40px; color: #999;">+</div>
                     <div class="org-box" style="border: 2px solid var(--kyriba-yellow);">
                         <div class="org-num">3</div>
                         <div style="font-weight: bold;">CESAs</div>
-                        <p style="font-size: 14px;">Customer Engagement Solution Advisors</p>
+                        <p style="font-size: 14px;">Customer Engagement Solution Advisors [cite: 1386]</p>
                     </div>
                 </div>
-                <p style="margin-top: 40px; font-size: 16px; color: #666;">
-                    Providing high-leverage technical and advisory support across the CEE organization.
-                </p>
             </section>
 
             <section>
-                <h2>Meet Your CESA Team</h2>
-                <p style="font-size: 16px; margin-top: -20px;">(Click a card to reveal)</p>
-                <div class="team-grid">
-                    <div class="team-member" onclick="this.classList.toggle('active')">
-                        <div class="photo-container">
-                            <img src="Vimal.jpg" class="profile-pic" alt="Vimal Vinod">
-                        </div>
-                        <p class="member-name">Vimal Vinod</p>
-                    </div>
-                    <div class="team-member" onclick="this.classList.toggle('active')">
-                        <div class="photo-container">
-                            <img src="Juliana.jpg" class="profile-pic" alt="Juliana Boers">
-                        </div>
-                        <p class="member-name">Juliana Boers</p>
-                    </div>
-                    <div class="team-member" onclick="this.classList.toggle('active')">
-                        <div class="photo-container">
-                            <img src="Ousseynou.jpg" class="profile-pic" alt="Ousseynou Faye">
-                        </div>
-                        <p class="member-name">Ousseynou Faye</p>
-                    </div>
+                <h2>Meet Your Global Team</h2>
+                <p style="font-size: 14px; margin-top: -10px;">Click the yellow labels to meet Vimal, Juliana, and Ousseynou</p>
+                <div class="globe-wrapper">
+                    <div id="globeViz"></div>
                 </div>
             </section>
 
             <section data-background-color="#2e3a3f">
-                <h2 style="color: white; border-color: var(--kyriba-yellow);">Engagement Routing</h2>
+                <h2 style="color: white; border-color: var(--kyriba-yellow);">Engagement Routing [cite: 1489]</h2>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left; color: white;">
                     <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px;">
-                        <h4 style="color: var(--kyriba-yellow);">Support</h4>
-                        <p style="font-size: 16px;">Broken items, defects, outages, or unexpected behavior.</p>
+                        <h4 style="color: var(--kyriba-yellow);">Support [cite: 1490]</h4>
+                        <p style="font-size: 16px;">Broken items, defects, outages, or unexpected behavior[cite: 1491, 1492].</p>
                     </div>
                     <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px;">
-                        <h4 style="color: var(--kyriba-yellow);">Professional Services</h4>
-                        <p style="font-size: 16px;">New builds, modules, or configurations requiring a project plan.</p>
+                        <h4 style="color: var(--kyriba-yellow);">Professional Services [cite: 1496]</h4>
+                        <p style="font-size: 16px;">New builds or configurations requiring project plans and scoped SOWs[cite: 1497, 1498].</p>
                     </div>
                     <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px;">
-                        <h4 style="color: var(--kyriba-yellow);">Elevate</h4>
-                        <p style="font-size: 16px;">Training, knowledge gaps, and staff onboarding.</p>
+                        <h4 style="color: var(--kyriba-yellow);">Elevate [cite: 1500]</h4>
+                        <p style="font-size: 16px;">Training and knowledge gaps regarding platform usage[cite: 1501, 1502].</p>
                     </div>
                     <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; border: 1px solid var(--kyriba-yellow);">
-                        <h4 style="color: var(--kyriba-yellow);">CESA (SA)</h4>
-                        <p style="font-size: 16px;">Outcome mapping, workflow alignment, and value articulation.</p>
+                        <h4 style="color: var(--kyriba-yellow);">CESA (SA) [cite: 1504]</h4>
+                        <p style="font-size: 16px;">Outcome mapping, workflow alignment, and value articulation[cite: 1505].</p>
                     </div>
                 </div>
             </section>
@@ -189,28 +160,28 @@
             <section>
                 <div class="split-view">
                     <div style="flex: 1.2;">
-                        <h2>Role Clarity</h2>
+                        <h2>Role Clarity [cite: 1550]</h2>
                         <table style="width: 100%; border-collapse: collapse;">
                             <thead>
                                 <tr style="border-bottom: 2px solid var(--kyriba-yellow);">
-                                    <th style="padding: 10px; text-align: left; font-size: 18px;">CEE (Orchestrator)</th>
-                                    <th style="padding: 10px; text-align: left; font-size: 18px;">CESA (Accelerator)</th>
+                                    <th style="padding: 10px; text-align: left; font-size: 18px;">CEE [cite: 1551]</th>
+                                    <th style="padding: 10px; text-align: left; font-size: 18px;">CESA [cite: 1556]</th>
                                 </tr>
                             </thead>
                             <tbody style="font-size: 16px;">
                                 <tr>
                                     <td style="padding: 15px; vertical-align: top;">
                                         <ul>
-                                            <li>Owns value strategy</li>
-                                            <li>Revenue accountability</li>
-                                            <li>Identifies expansion signals</li>
+                                            <li>Owns value strategy [cite: 1551]</li>
+                                            <li>Revenue accountability [cite: 1552]</li>
+                                            <li>Identifies risk signals [cite: 1554]</li>
                                         </ul>
                                     </td>
                                     <td style="padding: 15px; vertical-align: top; background: rgba(0,0,0,0.02);">
                                         <ul>
-                                            <li>Translates technical to business</li>
-                                            <li>Diagnoses workflow gaps</li>
-                                            <li>Validates feasibility</li>
+                                            <li>Technical translation [cite: 1557]</li>
+                                            <li>Diagnoses gaps [cite: 1558]</li>
+                                            <li>Validates feasibility [cite: 1559]</li>
                                         </ul>
                                     </td>
                                 </tr>
@@ -224,24 +195,12 @@
             </section>
 
             <section>
-                <h2>The 4-Step Engagement Model</h2>
+                <h2>4-Step Engagement Model [cite: 1572]</h2>
                 <div class="step-container">
-                    <div class="step-card">
-                        <div class="step-header">1. Define</div>
-                        <p style="font-size: 14px;">CEE identifies objectives, risk level, and timing.</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-header" style="background: var(--kyriba-dark-grey); color: white;">2. Align</div>
-                        <p style="font-size: 14px;">Define roles, messaging, and expected deliverable.</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-header">3. Interact</div>
-                        <p style="font-size: 14px;">CEE frames business; CESA leads technical mapping.</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-header" style="background: var(--kyriba-dark-grey); color: white;">4. Drive</div>
-                        <p style="font-size: 14px;">Deliver agreed assets; CEE updates the Success Plan.</p>
-                    </div>
+                    <div class="step-card"><div class="step-header">1. Define [cite: 1573]</div><p style="font-size: 12px;">Identify objectives and risk[cite: 1574, 1575].</p></div>
+                    <div class="step-card"><div class="step-header" style="background:#2e3a3f; color:white;">2. Align [cite: 1579]</div><p style="font-size: 12px;">Define roles and deliverables[cite: 1580, 1583].</p></div>
+                    <div class="step-card"><div class="step-header">3. Interact [cite: 1584]</div><p style="font-size: 12px;">Lead business framing and translation[cite: 1585, 1586].</p></div>
+                    <div class="step-card"><div class="step-header" style="background:#2e3a3f; color:white;">4. Drive [cite: 1588]</div><p style="font-size: 12px;">SA delivers; CEE updates Success Plan[cite: 1589, 1590].</p></div>
                 </div>
                 <a href="https://docs.google.com/document/d/13QXPrfvl9IuJx_dj3qyE-b0gwY92TfdzMwodyM7Ig1o/edit?usp=sharing" target="_blank" class="kyriba-btn">View Rules of Engagement</a>
             </section>
@@ -249,71 +208,109 @@
             <section>
                 <div class="split-view">
                     <div style="flex: 1;">
-                        <h2>Pre-Engagement Checklist</h2>
-                        <p style="font-size: 18px; font-weight: bold;">CEE must provide:</p>
-                        <ul style="font-size: 16px;">
-                            <li>Renewal Date & ARR</li>
-                            <li>Current Risk Status</li>
-                            <li>Problem Hypothesis</li>
-                            <li>Desired Measurable Outcome</li>
-                            <li>Target Timeline</li>
+                        <h2>Checklist [cite: 1487]</h2>
+                        <p style="font-size: 16px; font-weight: bold;">CEE must provide: [cite: 1528, 1529]</p>
+                        <ul style="font-size: 15px;">
+                            <li>Renewal Date & ARR [cite: 1530]</li>
+                            <li>Current Risk Status [cite: 1531]</li>
+                            <li>Problem Hypothesis [cite: 1533]</li>
+                            <li>Measurable Outcome [cite: 1534]</li>
                         </ul>
                         <a href="https://docs.google.com/document/d/1AoprncnGx3CbQDbK677fHnM9EqNyMb5mL24uMfZzqug/edit?usp=sharing" target="_blank" class="kyriba-btn">View Pre-Engagement Checklist</a>
                     </div>
                     <div style="flex: 1;">
                         <img src="AdobeStock_188531911.jpeg" style="border-radius: 10px; width: 100%;">
-                        <div style="background: var(--kyriba-yellow); padding: 15px; border-radius: 5px; margin-top: 15px; font-size: 14px;">
-                            <strong>Note:</strong> SA engagement is impact-driven. If you cannot articulate the business objective, do not engage yet.
-                        </div>
                     </div>
                 </div>
             </section>
 
             <section>
-                <h2>Submitting a Request (Gainsight)</h2>
-                <p style="font-size: 18px; text-align: left;">Requests are submitted by creating an <strong>Activity</strong> in Gainsight and applying the CESA template.</p>
-                
-                <div class="gainsight-grid">
-                    <div class="gainsight-card">
-                        <h4>SA Workshop</h4>
-                        <p style="font-size: 14px;">Strategic sessions for value discovery, workflow alignment, or executive conversations.</p>
+                <h2>Submitting via Gainsight [cite: 1610]</h2>
+                <div class="gainsight-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                    <div class="gainsight-card" style="background:white; border:1px solid #ddd; padding:10px; border-radius:5px;">
+                        <h4 style="font-size:14px; color:var(--kyriba-dark-grey); border-bottom:2px solid var(--kyriba-yellow);">SA Workshop [cite: 1618]</h4>
+                        <p style="font-size: 11px;">Strategic sessions for value discovery[cite: 1619, 1620].</p>
                     </div>
-                    <div class="gainsight-card">
-                        <h4>SA Help</h4>
-                        <p style="font-size: 14px;">Quick support for functionality questions, ad hoc triage, or unclear customer asks.</p>
+                    <div class="gainsight-card" style="background:white; border:1px solid #ddd; padding:10px; border-radius:5px;">
+                        <h4 style="font-size:14px; color:var(--kyriba-dark-grey); border-bottom:2px solid var(--kyriba-yellow);">SA Help [cite: 1626]</h4>
+                        <p style="font-size: 11px;">Tactical triage and functional questions[cite: 1627, 1628].</p>
                     </div>
-                    <div class="gainsight-card" style="border: 2px solid var(--kyriba-yellow);">
-                        <h4>SA Database Review</h4>
-                        <p style="font-size: 14px;">Investigations into data quality, usage patterns, or structural analysis.</p>
+                    <div class="gainsight-card" style="background:white; border:2px solid var(--kyriba-yellow); padding:10px; border-radius:5px;">
+                        <h4 style="font-size:14px; color:var(--kyriba-dark-grey); border-bottom:2px solid var(--kyriba-yellow);">SA DB Review [cite: 1633]</h4>
+                        <p style="font-size: 11px;">Investigations into data and usage patterns[cite: 1634, 1681].</p>
                     </div>
                 </div>
-                
-                <div style="margin-top: 30px; font-size: 16px; background: rgba(0,0,0,0.05); padding: 15px; border-radius: 8px;">
-                    <strong>Status:</strong> Gainsight templates are currently under construction. <br>
-                    <strong>Target Completion:</strong> End of April 2026.
-                </div>
-                
-                <a href="https://docs.google.com/document/d/1PDH2UoIys2wzSEnoRRph6qypAKq3zmaD1QX0mIC3GV8/edit?usp=sharing" target="_blank" class="kyriba-btn">View Gainsight Request Documentation</a>
+                <p style="font-size: 14px; margin-top: 20px;"><strong>Target:</strong> End of April 2026</p>
+                <a href="https://docs.google.com/document/d/1PDH2UoIys2wzSEnoRRph6qypAKq3zmaD1QX0mIC3GV8/edit?usp=sharing" target="_blank" class="kyriba-btn">View Documentation</a>
             </section>
 
             <section data-background-color="var(--kyriba-dark-grey)">
-                <h1 style="color: white;">Thank You.</h1>
+                <h1 style="color: white;">Thank You[cite: 337, 340, 1383, 1385].</h1>
                 <p style="color: var(--kyriba-yellow);">Let's unlock customer value together.</p>
-                <div style="margin-top: 50px; color: #ccc; font-size: 14px;">Questions? Reach out to the CESA Team.</div>
             </section>
 
         </div>
     </div>
 
+    <div id="profile-overlay">
+        <div id="close-btn" onclick="closeProfile()">×</div>
+        <img id="profile-img" src="" alt="">
+        <h3 id="profile-name"></h3>
+        <p id="profile-loc" style="font-size: 16px; color: #666; margin-top: 10px;"></p>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.js"></script>
     <script>
-        Reveal.initialize({
-            hash: true,
-            center: true,
-            transition: 'slide',
-            controls: true,
-            progress: true
+        // Initialize Reveal.js first
+        const revealInst = new Reveal();
+        revealInst.initialize({ 
+            hash: true, 
+            center: true, 
+            transition: 'slide', 
+            controls: true, 
+            progress: true 
         });
+
+        // TEAM DATA
+        const teamData = [
+            { name: 'Vimal Vinod', city: 'London, England', lat: 51.5074, lng: -0.1278, img: 'Vimal.jpg' },
+            { name: 'Juliana Boers', city: 'Toronto, Canada', lat: 43.6532, lng: -79.3832, img: 'Juliana.jpg' },
+            { name: 'Ousseynou Faye', city: 'Dublin, Ireland', lat: 53.3498, lng: -6.2603, img: 'Ousseynou.jpg' }
+        ];
+
+        // GLOBE CONFIG
+        const globe = Globe()
+            (document.getElementById('globeViz'))
+            .globeImageUrl('//unpkg.com/three-globe/example/img/earth-dark.jpg')
+            .bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png')
+            .backgroundImageUrl('//unpkg.com/three-globe/example/img/night-sky.png')
+            .labelsData(teamData)
+            .labelLat(d => d.lat)
+            .labelLng(d => d.lng)
+            .labelText(d => d.name)
+            .labelSize(1.5)
+            .labelDotRadius(0.8)
+            .labelColor(() => '#d4f01e')
+            .labelResolution(3)
+            .onLabelClick(d => showProfile(d));
+
+        globe.controls().autoRotate = true;
+        globe.controls().autoRotateSpeed = 0.8;
+        globe.pointOfView({ lat: 30, lng: -40, altitude: 2.2 }); // Focus on Atlantic hub
+
+        function showProfile(person) {
+            console.log("Pin clicked for: " + person.name);
+            document.getElementById('profile-img').src = person.img;
+            document.getElementById('profile-name').innerText = person.name;
+            document.getElementById('profile-loc').innerText = "Location: " + person.city;
+            document.getElementById('profile-overlay').style.display = 'block';
+            globe.controls().autoRotate = false;
+        }
+
+        function closeProfile() {
+            document.getElementById('profile-overlay').style.display = 'none';
+            globe.controls().autoRotate = true;
+        }
     </script>
 </body>
 </html>
