@@ -15,7 +15,6 @@
             --kyriba-yellow: #d4f01e;
             --kyriba-dark-grey: #2e3a3f;
             --kyriba-text: #1a1a1a;
-            --glass: rgba(255, 255, 255, 0.1);
         }
 
         .reveal { background-color: var(--kyriba-off-white); color: var(--kyriba-text); }
@@ -38,37 +37,75 @@
         }
         .kyriba-btn:hover { background-color: #c0d91a; transform: scale(1.05); }
 
-        /* Globe Section */
-        .globe-container {
-            width: 100%;
-            height: 600px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
+        /* Globe Background */
+        .globe-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            opacity: 0.8;
         }
-        #globeViz { width: 1000px; height: 600px; }
+        .globe-slide h2 { color: white; border-bottom: 3px solid var(--kyriba-yellow); }
 
-        /* Interactive Reveal Card (Team) */
-        #reveal-card {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 9999;
+        /* Interactive Team Grid (Click to Reveal) */
+        .team-grid { display: flex; justify-content: center; gap: 40px; margin-top: 30px; position: relative; z-index: 10; }
+        .team-member { 
+            flex: 0 1 250px; 
+            text-align: center; 
+            cursor: pointer;
             background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.4);
-            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             border: 2px solid var(--kyriba-yellow);
-            width: 350px;
-            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.2s;
+        }
+        .team-member:hover { transform: translateY(-5px); }
+
+        .photo-container {
+            width: 200px;
+            height: 200px;
+            background-color: var(--kyriba-dark-grey);
+            border-radius: 5px;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 0 var(--kyriba-dark-grey);
         }
 
-        /* Interactive Report Modal (Assessments) */
+        .photo-container::after {
+            content: 'Click to Meet';
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            opacity: 1;
+            transition: opacity 0.3s;
+        }
+
+        .profile-pic { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0; 
+            transition: opacity 0.6s ease-in-out;
+        }
+
+        /* Revealed state */
+        .team-member.active .profile-pic { opacity: 1; }
+        .team-member.active .photo-container::after { opacity: 0; }
+
+        .member-name { font-weight: bold; margin: 10px 0 0 0; font-size: 22px !important; color: var(--kyriba-text); }
+        .member-loc { font-size: 14px; color: #666; margin-top: 5px;}
+
+        /* Interactive Report Modal (Enlarged) */
         #report-modal {
             display: none;
             position: fixed;
@@ -83,8 +120,9 @@
             box-shadow: 0 25px 50px rgba(0,0,0,0.5);
             text-align: left;
             border-top: 8px solid var(--kyriba-yellow);
-            width: 800px;
-            max-height: 80vh;
+            width: 1100px; /* Made significantly larger */
+            max-width: 95vw;
+            max-height: 90vh;
             overflow-y: auto;
             animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
@@ -94,30 +132,24 @@
             to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
         }
 
-        #reveal-card img {
-            width: 250px;
-            height: 250px;
-            object-fit: cover;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-
         #report-img {
             width: 100%;
             border-radius: 8px;
             border: 1px solid #ddd;
             margin-top: 20px;
-            display: none; /* Hidden by default, shown via JS if exists */
+            display: none;
         }
 
-        #reveal-card h3 { margin: 0; color: var(--kyriba-dark-grey); font-size: 28px; }
-        #reveal-card p { color: #666; font-size: 18px; margin-top: 5px; }
-
-        .close-x {
-            position: absolute; top: 15px; right: 20px; cursor: pointer;
-            font-size: 30px; font-weight: bold; color: #ccc;
+        #report-pdf {
+            width: 100%;
+            height: 500px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            margin-top: 20px;
+            display: none;
         }
+
+        .close-x { position: absolute; top: 15px; right: 20px; cursor: pointer; font-size: 30px; font-weight: bold; color: #ccc; }
         .close-x:hover { color: var(--kyriba-text); }
 
         /* General Layouts */
@@ -130,16 +162,6 @@
         .step-header { background: var(--kyriba-yellow); font-weight: bold; padding: 5px; margin: -15px -15px 15px -15px; border-radius: 8px 8px 0 0; font-size: 18px; }
         .split-view { display: flex; align-items: center; gap: 40px; text-align: left; }
         
-        .globe-bg { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; opacity: 0.8; }
-        .team-grid { display: flex; justify-content: center; gap: 40px; margin-top: 30px; position: relative; z-index: 10; }
-        .team-member { flex: 0 1 250px; text-align: center; background: rgba(255, 255, 255, 0.95); padding: 20px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 2px solid var(--kyriba-yellow); cursor: pointer; transition: transform 0.2s;}
-        .team-member:hover { transform: translateY(-5px); }
-        .photo-container { width: 200px; height: 200px; margin: 0 auto 15px; border-radius: 5px; overflow: hidden; box-shadow: 0 5px 0 var(--kyriba-dark-grey); }
-        .profile-pic { width: 100%; height: 100%; object-fit: cover; }
-        .member-name { font-weight: bold; margin: 10px 0 0 0; font-size: 22px !important; color: var(--kyriba-text); }
-        .member-loc { font-size: 14px; color: #666; margin-top: 5px;}
-        .globe-slide h2 { color: white; border-bottom: 3px solid var(--kyriba-yellow); }
-
         .gainsight-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 30px; text-align: left; }
         .gainsight-card { background: white; padding: 25px; border-radius: 10px; border: 1px solid #ddd; height: 100%; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; position: relative; overflow: hidden;}
         .gainsight-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
@@ -193,24 +215,24 @@
                 <div class="globe-bg" id="globeViz"></div>
                 
                 <h2>Meet Your Global Team</h2>
-                <p style="color: #888; font-size: 16px; margin-top: -20px;">Click a card to view profile</p>
+                <p style="color: #888; font-size: 16px; margin-top: -20px;">Click a card to reveal</p>
                 
                 <div class="team-grid">
-                    <div class="team-member" onclick="openProfile('Vimal.jpg', 'Vimal Vinod', 'London, England')">
+                    <div class="team-member" onclick="this.classList.toggle('active')">
                         <div class="photo-container">
                             <img src="Vimal.jpg" class="profile-pic" alt="Vimal Vinod">
                         </div>
                         <p class="member-name">Vimal Vinod</p>
                         <p class="member-loc">London, England</p>
                     </div>
-                    <div class="team-member" onclick="openProfile('Juliana.jpg', 'Juliana Boers', 'Toronto, Canada')">
+                    <div class="team-member" onclick="this.classList.toggle('active')">
                         <div class="photo-container">
                             <img src="Juliana.jpg" class="profile-pic" alt="Juliana Boers">
                         </div>
                         <p class="member-name">Juliana Boers</p>
                         <p class="member-loc">Toronto, Canada</p>
                     </div>
-                    <div class="team-member" onclick="openProfile('Ousseynou.jpg', 'Ousseynou Faye', 'Dublin, Ireland')">
+                    <div class="team-member" onclick="this.classList.toggle('active')">
                         <div class="photo-container">
                             <img src="Ousseynou.jpg" class="profile-pic" alt="Ousseynou Faye">
                         </div>
@@ -324,29 +346,30 @@
             </section>
 
             <section>
-                <h2>Submitting via Gainsight</h2>
-                <p style="font-size: 18px; text-align: left;">Create an <strong>Activity</strong> and apply the CESA template.</p>
+                <h2>Submitting a Request (Gainsight)</h2>
+                <p style="font-size: 18px; text-align: left;">Requests are submitted by creating an <strong>Activity</strong> in Gainsight and applying the CESA template.</p>
                 
                 <div class="gainsight-grid">
                     <div class="gainsight-card">
                         <h4>SA Workshop</h4>
-                        <p style="font-size: 14px;">Strategic sessions for value discovery or workflow alignment.</p>
+                        <p style="font-size: 14px;">Strategic sessions for value discovery, workflow alignment, or executive conversations.</p>
                     </div>
                     <div class="gainsight-card">
                         <h4>SA Help</h4>
-                        <p style="font-size: 14px;">Quick support for functional questions or unclear asks.</p>
+                        <p style="font-size: 14px;">Quick support for functionality questions, ad hoc triage, or unclear customer asks.</p>
                     </div>
-                    <div class="gainsight-card">
+                    <div class="gainsight-card" style="border: 2px solid var(--kyriba-yellow);">
                         <h4>SA Database Review</h4>
-                        <p style="font-size: 14px;">Technical investigation of usage patterns or data quality.</p>
+                        <p style="font-size: 14px;">Investigations into data quality, usage patterns, or structural analysis.</p>
                     </div>
                 </div>
                 
                 <div style="margin-top: 30px; font-size: 16px; background: rgba(0,0,0,0.05); padding: 15px; border-radius: 8px;">
-                    <strong>Target Completion:</strong> End of April 2026
+                    <strong>Status:</strong> Gainsight templates are currently under construction. <br>
+                    <strong>Target Completion:</strong> End of April 2026.
                 </div>
                 
-                <a href="https://docs.google.com/document/d/1PDH2UoIys2wzSEnoRRph6qypAKq3zmaD1QX0mIC3GV8/edit?usp=sharing" target="_blank" class="kyriba-btn">View Gainsight Documentation</a>
+                <a href="https://docs.google.com/document/d/1PDH2UoIys2wzSEnoRRph6qypAKq3zmaD1QX0mIC3GV8/edit?usp=sharing" target="_blank" class="kyriba-btn">View Gainsight Request Documentation</a>
             </section>
 
             <section>
@@ -361,7 +384,7 @@
                         <p style="font-size: 12px; color: var(--kyriba-yellow); font-weight: bold; margin-top: 15px;">View Details →</p>
                     </div>
 
-                    <div class="gainsight-card" onclick="openReport('Quantitative Review', 'Kyriba Users (Treasury Back Office, Sys Admin)', 'Google Forms + Dust AI (@CustomerAssessment)', 'A Google form sent by CEEs focusing on setup and best practices. Customers are scored based on responses, and the Dust AI agent generates a report with recommendations.', '', '')">
+                    <div class="gainsight-card" onclick="openReport('Quantitative Review', 'Kyriba Users (Treasury Back Office, Sys Admin)', 'Google Forms + Dust AI (@CustomerAssessment)', 'A Google form sent by CEEs focusing on setup and best practices. Customers are scored based on responses, and the Dust AI agent generates a report with recommendations.', 'Clariane_Assessment_Dashboard.pdf', 'https://app.dust.tt/w/1616590054/conversation/UwTucBjHYy#?spid=fil_IxvcBcjc6vGXJ1&spt=interactive_content')">
                         <span class="tag">User-Level</span>
                         <h4>Quantitative Review</h4>
                         <p style="font-size: 14px;">Module setup scoring and AI recommendations.</p>
@@ -385,13 +408,6 @@
         </div>
     </div>
 
-    <div id="reveal-card">
-        <div class="close-x" onclick="closeCard()">×</div>
-        <img id="card-img" src="" alt="Team Member">
-        <h3 id="card-name"></h3>
-        <p id="card-loc" style="font-size: 14px; color: #666; margin-top: 5px;"></p>
-    </div>
-
     <div id="report-modal">
         <div class="close-x" onclick="closeReport()">×</div>
         <h2 id="report-title" style="margin-bottom: 10px; font-size: 32px; border:none;"></h2>
@@ -402,9 +418,10 @@
         <p id="report-desc" style="font-size: 16px; color: #444; line-height: 1.5;"></p>
         
         <img id="report-img" src="" alt="Report Sample">
+        <iframe id="report-pdf" src="" type="application/pdf"></iframe>
         
         <div id="report-link-container" style="margin-top: 20px; display: none;">
-            <a id="report-link" href="#" target="_blank" class="kyriba-btn">Open Live Dashboard</a>
+            <a id="report-link" href="#" target="_blank" class="kyriba-btn">Open Live Dashboard / Report</a>
         </div>
     </div>
 
@@ -437,34 +454,28 @@
         myGlobe.controls().autoRotateSpeed = 1.0;
         myGlobe.pointOfView({ lat: 35, lng: -40, altitude: 2.5 });
 
-        /* Team Modal Logic */
-        function openProfile(imgSrc, name, loc) {
-            document.getElementById('card-img').src = imgSrc;
-            document.getElementById('card-name').innerText = name;
-            document.getElementById('card-loc').innerText = loc;
-            document.getElementById('reveal-card').style.display = 'block';
-            myGlobe.controls().autoRotate = false;
-        }
-
-        function closeCard() {
-            document.getElementById('reveal-card').style.display = 'none';
-            myGlobe.controls().autoRotate = true;
-        }
-
         /* Assessment Report Modal Logic */
-        function openReport(title, target, tech, desc, imgSrc, linkUrl) {
+        function openReport(title, target, tech, desc, mediaSrc, linkUrl) {
             document.getElementById('report-title').innerText = title;
             document.getElementById('report-target').innerText = "Target: " + target;
             document.getElementById('report-tech').innerText = "Stack: " + tech;
             document.getElementById('report-desc').innerText = desc;
 
-            // Handle Image
+            // Handle Image vs PDF
             const imgElement = document.getElementById('report-img');
-            if (imgSrc) {
-                imgElement.src = imgSrc;
-                imgElement.style.display = 'block';
-            } else {
-                imgElement.style.display = 'none';
+            const pdfElement = document.getElementById('report-pdf');
+            
+            imgElement.style.display = 'none';
+            pdfElement.style.display = 'none';
+
+            if (mediaSrc) {
+                if (mediaSrc.toLowerCase().endsWith('.pdf')) {
+                    pdfElement.src = mediaSrc;
+                    pdfElement.style.display = 'block';
+                } else {
+                    imgElement.src = mediaSrc;
+                    imgElement.style.display = 'block';
+                }
             }
 
             // Handle Link
@@ -482,6 +493,7 @@
 
         function closeReport() {
             document.getElementById('report-modal').style.display = 'none';
+            document.getElementById('report-pdf').src = ''; // stop pdf load when closed
         }
     </script>
 </body>
