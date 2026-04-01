@@ -50,20 +50,17 @@
         }
         .globe-slide h2 { color: white; border-bottom: 3px solid var(--kyriba-yellow); }
 
-        /* Interactive Team Grid (Click to Reveal) */
+        /* Static Team Grid (Visible by default) */
         .team-grid { display: flex; justify-content: center; gap: 40px; margin-top: 30px; position: relative; z-index: 10; }
         .team-member { 
             flex: 0 1 250px; 
             text-align: center; 
-            cursor: pointer;
             background: rgba(255, 255, 255, 0.95);
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             border: 2px solid var(--kyriba-yellow);
-            transition: transform 0.2s;
         }
-        .team-member:hover { transform: translateY(-5px); }
 
         .photo-container {
             width: 200px;
@@ -79,29 +76,11 @@
             box-shadow: 0 5px 0 var(--kyriba-dark-grey);
         }
 
-        .photo-container::after {
-            content: 'Click to Meet';
-            color: white;
-            font-weight: bold;
-            font-size: 14px;
-            opacity: 1;
-            transition: opacity 0.3s;
-        }
-
         .profile-pic { 
             width: 100%; 
             height: 100%; 
             object-fit: cover; 
-            position: absolute;
-            top: 0;
-            left: 0;
-            opacity: 0; 
-            transition: opacity 0.6s ease-in-out;
         }
-
-        /* Revealed state */
-        .team-member.active .profile-pic { opacity: 1; }
-        .team-member.active .photo-container::after { opacity: 0; }
 
         .member-name { font-weight: bold; margin: 10px 0 0 0; font-size: 22px !important; color: var(--kyriba-text); }
         .member-loc { font-size: 14px; color: #666; margin-top: 5px;}
@@ -163,7 +142,6 @@
         .step-header { background: var(--kyriba-yellow); font-weight: bold; padding: 5px; margin: -15px -15px 15px -15px; border-radius: 8px 8px 0 0; font-size: 18px; }
         .split-view { display: flex; align-items: center; gap: 40px; text-align: left; }
         
-        /* Updated Gainsight Grid to prevent overlap */
         .gainsight-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px; text-align: left; }
         .gainsight-card { background: white; padding: 20px; border-radius: 10px; border: 1px solid #ddd; height: auto; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; position: relative; overflow: hidden;}
         .gainsight-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
@@ -217,24 +195,23 @@
                 <div class="globe-bg" id="globeViz"></div>
                 
                 <h2>Meet Your Global Team</h2>
-                <p style="color: #888; font-size: 16px; margin-top: -20px;">Click a card to reveal</p>
                 
                 <div class="team-grid">
-                    <div class="team-member" onclick="this.classList.toggle('active')">
+                    <div class="team-member">
                         <div class="photo-container">
                             <img src="Vimal.jpg" class="profile-pic" alt="Vimal Vinod">
                         </div>
                         <p class="member-name">Vimal Vinod</p>
                         <p class="member-loc">London, England</p>
                     </div>
-                    <div class="team-member" onclick="this.classList.toggle('active')">
+                    <div class="team-member">
                         <div class="photo-container">
                             <img src="Juliana.jpg" class="profile-pic" alt="Juliana Boers">
                         </div>
                         <p class="member-name">Juliana Boers</p>
                         <p class="member-loc">Toronto, Canada</p>
                     </div>
-                    <div class="team-member" onclick="this.classList.toggle('active')">
+                    <div class="team-member">
                         <div class="photo-container">
                             <img src="Ousseynou.jpg" class="profile-pic" alt="Ousseynou Faye">
                         </div>
@@ -379,21 +356,21 @@
                 <p style="font-size: 16px; margin-top: -20px;">Driving value conversations during Business Reviews. Click to view samples.</p>
                 
                 <div class="gainsight-grid">
-                    <div class="gainsight-card" onclick="openReport('Qualitative Review', 'Business Owners (Head of Treasury, CFO)', 'Salesforce + Cuvama', 'Sends a questionnaire focused on value realization. Generates a report comparing current state vs. peers vs. best practice.', 'Cuvama Assessment.jpg', 'https://kyriba.lightning.force.com/one/one.app#eyJjb21wb25lbnREZWYiOiJvbmU6YWxvaGFQYWdlIiwiYXR0cmlidXRlcyI6eyJhZGRyZXNzIjoiaHR0cHM6Ly9reXJpYmEtLWMudmYuZm9yY2UuY29tL2FwZXgvVmFsdWVFbmdpbmVlcmluZ1BlcmZvcm1hbmNlQnlQcm9jZXNzP2lkPWFERUlWMDAwMDAwVWpYWjRBMCZzZmRjSUZyYW1lT3JpZ2luPWh0dHBzJTNBJTJGJTJGa3lyaWJhLmxpZ2h0bmluZy5mb3JjZS5jb20ifSwic3RhdGUiOnt9fQ%3D%3D')">
+                    <div class="gainsight-card" onclick="openReport(0)">
                         <span class="tag">Exec-Level</span>
                         <h4>Qualitative Review</h4>
                         <p style="font-size: 14px;">Value realization benchmarking vs. peers.</p>
                         <p style="font-size: 12px; color: var(--kyriba-yellow); font-weight: bold; margin-top: 15px;">View Details →</p>
                     </div>
 
-                    <div class="gainsight-card" onclick="openReport('Quantitative Review', 'Kyriba Users (Treasury Back Office, Sys Admin)', 'Google Forms + Dust AI (@CustomerAssessment)', 'A Google form sent by CEEs focusing on setup and best practices. Customers are scored based on responses, and the Dust AI agent generates a report with recommendations.', 'Clariane_Assessment_Dashboard.pdf', 'https://app.dust.tt/w/1616590054/conversation/zxGbwYCno3#?spid=fil_fG9iWnEndJQtwc&spt=interactive_content')">
+                    <div class="gainsight-card" onclick="openReport(1)">
                         <span class="tag">User-Level</span>
                         <h4>Quantitative Review</h4>
                         <p style="font-size: 14px;">Module setup scoring and AI recommendations.</p>
                         <p style="font-size: 12px; color: var(--kyriba-yellow); font-weight: bold; margin-top: 15px;">View Details →</p>
                     </div>
 
-                    <div class="gainsight-card" onclick="openReport('Utilization Review', 'Usage Tracking', 'Lookerstudio > BigQuery > Gainsight', 'Automatically tracks customer utilization percentages across recommended modules based on database logs.', 'Utilization Assessment.jpg', 'https://lookerstudio.google.com/u/0/reporting/26449f45-2af6-4cfc-a14b-cf1e770d2603/page/p_dwgs4n4evd')">
+                    <div class="gainsight-card" onclick="openReport(2)">
                         <span class="tag">Automated</span>
                         <h4>Utilization Review</h4>
                         <p style="font-size: 14px;">Data-driven module utilization tracking.</p>
@@ -422,9 +399,8 @@
         <img id="report-img" src="" alt="Report Sample">
         <iframe id="report-pdf" src="" type="application/pdf"></iframe>
         
-        <div id="report-link-container" style="margin-top: 20px; display: none;">
-            <a id="report-link" href="#" target="_blank" class="kyriba-btn">Open Live Dashboard / Report</a>
-        </div>
+        <div id="report-link-container" style="margin-top: 20px; display: none; gap: 15px; flex-wrap: wrap;">
+            </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.js"></script>
@@ -458,12 +434,50 @@
         // Centered roughly over the North Atlantic to see all three pins clearly
         myGlobe.pointOfView({ lat: 48, lng: -40, altitude: 2.2 });
 
+        /* Assessment Tools Data */
+        const assessmentTools = [
+            {
+                title: "Qualitative Review",
+                target: "Business Owners (Head of Treasury, CFO)",
+                tech: "Salesforce + Cuvama",
+                desc: "Sends a questionnaire focused on value realization. Generates a report comparing current state vs. peers vs. best practice.",
+                media: "Cuvama Assessment.jpg",
+                links: [
+                    { text: "Open Live Dashboard", url: "https://kyriba.lightning.force.com/one/one.app#eyJjb21wb25lbnREZWYiOiJvbmU6YWxvaGFQYWdlIiwiYXR0cmlidXRlcyI6eyJhZGRyZXNzIjoiaHR0cHM6Ly9reXJpYmEtLWMudmYuZm9yY2UuY29tL2FwZXgvVmFsdWVFbmdpbmVlcmluZ1BlcmZvcm1hbmNlQnlQcm9jZXNzP2lkPWFERUlWMDAwMDAwVWpYWjRBMCZzZmRjSUZyYW1lT3JpZ2luPWh0dHBzJTNBJTJGJTJGa3lyaWJhLmxpZ2h0bmluZy5mb3JjZS5jb20ifSwic3RhdGUiOnt9fQ%3D%3D" }
+                ]
+            },
+            {
+                title: "Quantitative Review",
+                target: "Kyriba Users (Treasury Back Office, Sys Admin)",
+                tech: "Google Forms + Dust AI (@CustomerAssessment)",
+                desc: "A Google form sent by CEEs focusing on setup and best practices. Customers are scored based on responses, and the Dust AI agent generates a report with recommendations.",
+                media: "Clariane_Assessment_Dashboard.pdf",
+                links: [
+                    { text: "Google Form (Collect)", url: "https://docs.google.com/forms/d/1b-7la0-A5cSxHFcZ2-ByjW468EKGujyBYAiVGYP0z6M/edit#responses" },
+                    { text: "Google Sheets (Responses)", url: "https://docs.google.com/spreadsheets/d/1KDlIBVS7ggInVdVoAYzat8353wfp-fwHHm6qV-yar_M/edit?usp=sharing" },
+                    { text: "Dust AI (Sample Query)", url: "https://app.dust.tt/w/1616590054/conversation/UwTucBjHYy#?spid=fil_IxvcBcjc6vGXJ1&spt=interactive_content" }
+                ]
+            },
+            {
+                title: "Utilization Review",
+                target: "Usage Tracking",
+                tech: "Lookerstudio > BigQuery > Gainsight",
+                desc: "Automatically tracks customer utilization percentages across recommended modules based on database logs.",
+                media: "Utilization Assessment.jpg",
+                links: [
+                    { text: "Open Live Dashboard", url: "https://lookerstudio.google.com/u/0/reporting/26449f45-2af6-4cfc-a14b-cf1e770d2603/page/p_dwgs4n4evd" }
+                ]
+            }
+        ];
+
         /* Assessment Report Modal Logic */
-        function openReport(title, target, tech, desc, mediaSrc, linkUrl) {
-            document.getElementById('report-title').innerText = title;
-            document.getElementById('report-target').innerText = "Target: " + target;
-            document.getElementById('report-tech').innerText = "Stack: " + tech;
-            document.getElementById('report-desc').innerText = desc;
+        function openReport(index) {
+            const data = assessmentTools[index];
+
+            document.getElementById('report-title').innerText = data.title;
+            document.getElementById('report-target').innerText = "Target: " + data.target;
+            document.getElementById('report-tech').innerText = "Stack: " + data.tech;
+            document.getElementById('report-desc').innerText = data.desc;
 
             // Handle Image vs PDF
             const imgElement = document.getElementById('report-img');
@@ -472,22 +486,31 @@
             imgElement.style.display = 'none';
             pdfElement.style.display = 'none';
 
-            if (mediaSrc) {
-                if (mediaSrc.toLowerCase().endsWith('.pdf')) {
-                    pdfElement.src = mediaSrc;
+            if (data.media) {
+                if (data.media.toLowerCase().endsWith('.pdf')) {
+                    pdfElement.src = data.media;
                     pdfElement.style.display = 'block';
                 } else {
-                    imgElement.src = mediaSrc;
+                    imgElement.src = data.media;
                     imgElement.style.display = 'block';
                 }
             }
 
-            // Handle Link
+            // Handle Dynamic Multiple Links
             const linkContainer = document.getElementById('report-link-container');
-            const linkElement = document.getElementById('report-link');
-            if (linkUrl) {
-                linkElement.href = linkUrl;
-                linkContainer.style.display = 'block';
+            linkContainer.innerHTML = ''; // clear previous links
+            
+            if (data.links && data.links.length > 0) {
+                linkContainer.style.display = 'flex';
+                data.links.forEach(link => {
+                    const btn = document.createElement('a');
+                    btn.href = link.url;
+                    btn.target = '_blank';
+                    btn.className = 'kyriba-btn';
+                    btn.innerText = link.text;
+                    btn.style.marginTop = '0'; // override default CSS margin for flex layout
+                    linkContainer.appendChild(btn);
+                });
             } else {
                 linkContainer.style.display = 'none';
             }
